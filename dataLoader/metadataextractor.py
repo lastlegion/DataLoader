@@ -19,7 +19,8 @@ class MetadataExtractor:
     def __init__(self, fileMetadata):
         self.fileMetadata = fileMetadata
         self.imageMetadata = self.extractImageMetadata()
-
+        if(self.imageMetadata == []):
+            print("Couldn't fetch image metadaa")
     def extractImageMetadata(self):
         fileMetadata = self.fileMetadata
         fileLocation = fileMetadata['file-location']
@@ -29,7 +30,8 @@ class MetadataExtractor:
 
             return payLoad
         except:
-            print("Couldn't read "+parsedInput[key])
+            print("Couldn't read "+fileLocation)
+
         return []
 
     def generateMD5Checksum(self,fileName):
@@ -49,25 +51,25 @@ class MetadataExtractor:
         payLoad = {}
         fileMetadata = self.fileMetadata
         imageMetadata = self.imageMetadata
+        if(imageMetadata):
+            for prop in self.PROPERTIES:
+                if prop == "file-location":
+                    payLoad['file-location'] = fileMetadata['file-location']
+                elif prop == "Id":
+                    payLoad['id'] = fileMetadata['id']
+                elif prop in ["mpp-x", "mpp-y", "vendor", "objective-power"]:
+                    payLoad[prop] = imageMetadata.properties['openslide.'+str(prop)]
+                elif prop in ["height", "width"]:
+                    hw = "openslide.level["+str(imageMetadata.level_count - 1)+"]."+str(prop)
+                    payLoad[prop] = imageMetadata.properties[hw]
+                elif prop == "md5sum":
+                    payLoad[prop] = self.generateMD5Checksum(fileMetadata['file-location'])
+                elif prop == "level_count":
+                    payLoad[prop] = imageMetadata.level_count
 
-        for prop in self.PROPERTIES:
-            if prop == "file-location":
-                payLoad['file-location'] = fileMetadata['file-location']
-            elif prop == "Id":
-                payLoad['id'] = fileMetadata['id']
-            elif prop in ["mpp-x", "mpp-y", "vendor", "objective-power"]:
-                payLoad[prop] = imageMetadata.properties['openslide.'+str(prop)]
-            elif prop in ["height", "width"]:
-                hw = "openslide.level["+str(imageMetadata.level_count - 1)+"]."+str(prop)
-                payLoad[prop] = imageMetadata.properties[hw]
-            elif prop == "md5sum":
-                payLoad[prop] = self.generateMD5Checksum(fileMetadata['file-location'])
-            elif prop == "level_count":
-                payLoad[prop] = imageMetadata.level_count
-
-            else:
-                print("Couldn't handle: "+ prop)
-        print(payLoad)
+                else:
+                    print("Couldn't handle: "+ prop)
+            #print(payLoad)
         return payLoad
 
 

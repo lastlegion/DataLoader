@@ -25,7 +25,7 @@ def parseInputFile(inputfile):
                 inputReader = csv.reader(f)
                 #for row in inputReader:
                 inputFileDict = {rows[0]:rows[len(rows)-1] for rows in inputReader}
-                print(inputFileDict)
+
                 return inputFileDict
 
             except IOError:
@@ -58,6 +58,7 @@ def parseInputs(argv):
         print("Usage: dataLoader -i <inputfile> -o <REST> -a <apiKey>")
         sys.exit()
 
+
     return {'inputfile': inputfile, 'output': output, 'apiKey': apiKey}
 
 
@@ -65,13 +66,13 @@ def main(argv):
     inputfile=""
     output=""
     inputs = parseInputs(argv)
-    print(inputs)
+    #print(inputs)
     inputfile = inputs['inputfile']
     outputfile = inputs['output']
     apiKey = inputs['apiKey']
     url = outputfile
-    print ("Input file: "+ inputfile)
-    print ("Output:  "+ outputfile)
+
+
     logging.basicConfig(filename='dataloader.log',  filemode='w', level=logging.DEBUG)
 
     logging.info("Log started on: "+str(datetime.datetime.now()))
@@ -85,6 +86,10 @@ def main(argv):
             extractor = MetadataExtractor(fileMetadata)
 
             payLoad = extractor.createPayLoad()
+            if(payLoad == {}):
+                logging.warning("Failed: Id: "+str(uId)+" file-location: "+ parsedInput[uId] + " couldn't find file or failed to fetch metadata")
+                continue
+
             response = postPayLoad(payLoad, url, apiKey)
             print(response.status_code)
             if(response.status_code != 200):
