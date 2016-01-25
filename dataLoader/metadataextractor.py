@@ -1,5 +1,5 @@
 import hashlib
-
+import time
 import openslide
 
 class MetadataExtractor:
@@ -11,6 +11,7 @@ class MetadataExtractor:
         "width",
         "height",
         "level_count",
+        "timestamp",
         "md5sum",
         "file-location", #From CSV
         "Id"
@@ -51,25 +52,42 @@ class MetadataExtractor:
         payLoad = {}
         fileMetadata = self.fileMetadata
         imageMetadata = self.imageMetadata
+        #print(imageMetadata.properties)
+        
         if(imageMetadata):
             for prop in self.PROPERTIES:
+                #print(prop)
                 if prop == "file-location":
                     payLoad['file-location'] = fileMetadata['file-location']
                 elif prop == "Id":
                     payLoad['id'] = fileMetadata['id']
-                elif prop in ["mpp-x", "mpp-y", "vendor", "objective-power"]:
-                    payLoad[prop] = imageMetadata.properties['openslide.'+str(prop)]
+                elif prop in ["mpp-x", "mpp-y", "objective-power"]:
+                    property_ = 'openslide.'+str(prop)
+                    if(property_ in imageMetadata.properties):
+
+                        payLoad[prop] = float(imageMetadata.properties['openslide.'+str(prop)])
+                    else:
+
+                        if(prop == "objective-power"):
+                            if("aperio.AppMag" in imageMetadata.properties):
+                                payLoad[prop] = float(imageMetadata.properties["aperio.AppMag"])
+                            else:
+                                print(imageMetadata.properties)
+
                 elif prop in ["height", "width"]:
                     hw = "openslide.level["+str(imageMetadata.level_count - 1)+"]."+str(prop)
-                    payLoad[prop] = imageMetadata.properties[hw]
+                    payLoad[prop] = int(imageMetadata.properties[hw])
+                elif prop == "vendor":
+                    payLoad[prop] = imageMetadata.properties['openslide.'+str(prop)]
                 elif prop == "md5sum":
                     payLoad[prop] = self.generateMD5Checksum(fileMetadata['file-location'])
                 elif prop == "level_count":
-                    payLoad[prop] = imageMetadata.level_count
-
+                    payLoad[prop] = int(imageMetadata.level_count)
+                elif prop == "timestamp":
+                    payLoad[prop] = time.time() 
                 else:
                     print("Couldn't handle: "+ prop)
-            #print(payLoad)
+
         return payLoad
 
 
