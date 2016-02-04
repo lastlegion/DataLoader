@@ -8,11 +8,11 @@ Installation:
 
 Make sure you have `LD_LIBRARY_PATH` set up 
 
-Usage:
+### Usage:
 `python dataLoader.py -i <inputCSVFile> -o <RESTinterface> -a <API key>`
 
 
-Issues:
+### Issues
 `ImportError: libopenjp2.so.7: cannot open shared object file.`
 Run 
 `export LD_LIBRARY_PATH=/usr/local/lib`
