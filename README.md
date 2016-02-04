@@ -14,7 +14,9 @@ Make sure you have `LD_LIBRARY_PATH` set up
 
 ### Issues
 `ImportError: libopenjp2.so.7: cannot open shared object file.`
-Run 
-`export LD_LIBRARY_PATH=/usr/local/lib`
 
+Run
+
+`export LD_LIBRARY_PATH=/usr/local/lib`
+to fix this.
 
