@@ -14,7 +14,7 @@ class MetadataExtractor:
         "timestamp",
         "md5sum",
         "file-location", #From CSV
-        "id"
+        "sample-id"
     ]
     fileMetadata = {}
     def __init__(self, fileMetadata):
@@ -59,7 +59,7 @@ class MetadataExtractor:
                 #print(prop)
                 if prop == "file-location":
                     payLoad[prop] = fileMetadata['file-location']
-                elif prop == "id":
+                elif prop == "sample-id":
                     payLoad[prop] = fileMetadata['id']
                 elif prop in ["mpp-x", "mpp-y", "objective-power"]:
                     property_ = 'openslide.'+str(prop)
