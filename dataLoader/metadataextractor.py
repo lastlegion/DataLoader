@@ -90,7 +90,7 @@ class MetadataExtractor:
         
         #Check nothing is missing
         for prop in self.PROPERTIES:
-            print(payLoad)
+            #print(payLoad)
             if not payLoad[prop]:
                 payLoad = {}
 
