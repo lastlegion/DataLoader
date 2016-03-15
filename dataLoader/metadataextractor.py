@@ -91,6 +91,8 @@ class MetadataExtractor:
         #Check nothing is missing
         for prop in self.PROPERTIES:
             #print(payLoad)
+            if prop not in payLoad
+                payLoad
             if not payLoad[prop]:
                 payLoad = {}
 
