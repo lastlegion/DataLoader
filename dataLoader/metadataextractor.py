@@ -75,7 +75,7 @@ class MetadataExtractor:
                                 print(imageMetadata.properties)
 
                 elif prop in ["height", "width"]:
-                    hw = "openslide.level["+str(imageMetadata.level_count - 1)+"]."+str(prop)
+                    hw = "openslide.level[0]."+str(prop)
                     payLoad[prop] = int(imageMetadata.properties[hw])
                 elif prop == "vendor":
                     payLoad[prop] = imageMetadata.properties['openslide.'+str(prop)]
@@ -91,7 +91,7 @@ class MetadataExtractor:
         #Check nothing is missing
         for prop in self.PROPERTIES:
             #print(payLoad)
-            if prop not in payLoad
+            if prop not in payLoad:
                 payLoad
             if not payLoad[prop]:
                 payLoad = {}
