@@ -24,7 +24,7 @@ def parseInputFile(inputfile):
                 #process
                 inputReader = csv.reader(f)
                 #for row in inputReader:
-                inputFileDict = {rows[0]:rows[len(rows)-1] for rows in inputReader}
+                inputFileDict = {rows[0]:rows[rows[1],rows[2]] for rows in inputReader}
 
                 return inputFileDict
 
@@ -72,7 +72,7 @@ def main(argv):
     apiKey = inputs['apiKey']
     url = outputfile
 
-
+  
     logging.basicConfig(filename='dataloader.log',  filemode='w', level=logging.DEBUG)
 
     logging.info("Log started on: "+str(datetime.datetime.now()))
@@ -82,9 +82,11 @@ def main(argv):
         if not uId == "Id":
             fileMetadata = {}
             fileMetadata['id']= uId
-            fileMetadata['file-location'] = parsedInput[uId]
+            fileMetadata['study_id'] = parsedInput[uId][0]
+            fileMetadata['file-location'] = parsedInput[uId][1]
+            print(fileMetadata)
             extractor = MetadataExtractor(fileMetadata)
-
+        
             payLoad = extractor.createPayLoad()
             if(payLoad == {}):
                 logging.warning("Failed: Id: "+str(uId)+" file-location: "+ parsedInput[uId] + " couldn't find file or failed to fetch metadata")
