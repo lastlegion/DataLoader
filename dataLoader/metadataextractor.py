@@ -60,14 +60,32 @@ class MetadataExtractor:
                 #print(prop)
                 if prop == "file-location":
                     payLoad[prop] = fileMetadata['file-location']
-                elif prop = 'study_id':
+                elif prop == 'study_id':
                     payLoad[prop] = fileMetadata['study_id']
                 elif prop == "case_id":
                     payLoad[prop] = fileMetadata['id']
                 elif prop in ["mpp-x", "mpp-y", "objective-power"]:
-                    property_ = 'openslide.'+str(prop)
-                    if(property_ in imageMetadata.properties):
 
+                    '''
+                    Tiff specific
+                    '''
+                    if prop == "mpp-x":
+                        if("tiff.XResolution" in imageMetadata.properties):
+                            payLoad[prop] = float(imageMetadata.properties["tiff.XResolution"])
+
+                    if prop == "mpp-y":
+                        if("tiff.YResolution" in imageMetadata.properties):
+                            payLoad[prop] = float(imageMetadata.properties["tiff.YResolution"])
+
+
+                    
+                    '''
+                    (SVS) Generic
+                    '''
+                    property_ = 'openslide.'+str(prop)
+                    
+                    if(property_ in imageMetadata.properties):
+                     
                         payLoad[prop] = float(imageMetadata.properties['openslide.'+str(prop)])
                     else:
 
@@ -90,7 +108,7 @@ class MetadataExtractor:
                     payLoad[prop] = time.time() 
                 else:
                     print("Couldn't handle: "+ prop)
-        
+       	''' 
         #Check nothing is missing
         for prop in self.PROPERTIES:
             #print(payLoad)
@@ -98,7 +116,7 @@ class MetadataExtractor:
                 payLoad
             if not payLoad[prop]:
                 payLoad = {}
-
+        '''
         return payLoad
 
 

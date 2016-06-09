@@ -24,7 +24,7 @@ def parseInputFile(inputfile):
                 #process
                 inputReader = csv.reader(f)
                 #for row in inputReader:
-                inputFileDict = {rows[0]:rows[rows[1],rows[2]] for rows in inputReader}
+                inputFileDict = {rows[0]:[rows[1],rows[2]] for rows in inputReader}
 
                 return inputFileDict
 
@@ -96,9 +96,9 @@ def main(argv):
             print(response.status_code)
             if(response.status_code != 200):
                 print("Failed: "+str(uId)+" file-location: "+ parsedInput[uId] + " with HTTP status code " + str(response.status_code))
-                logging.warning("Failed: "+str(uId)+" file-location: "+ parsedInput[uId] + " with HTTP status code " + str(response.status_code))
+                logging.warning("Failed: "+str(uId)+ " with HTTP status code " + str(response.status_code))
             else:
-                logging.info("Success: "+str(uId) + "file-location: " + parsedInput[uId] )
+                logging.info("Success: "+str(uId))
 
     logging.info("Compeleted on: "+str(datetime.datetime.now()))
 if __name__ == "__main__":
